@@ -11,6 +11,7 @@ public interface ApiInterface {
     Call<FetchNews> getNews(
             @Query("country") String country,
             @Query("pageSize") int pageSize,
+            @Query("page") int page,
             @Query("apiKey") String apiKey
     );
 
