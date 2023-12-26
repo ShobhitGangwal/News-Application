@@ -20,6 +20,7 @@ public interface ApiInterface {
             @Query("country") String country,
             @Query("category") String category,
             @Query("pageSize") int pageSize,
+            @Query("page") int page,
             @Query("apiKey") String apiKey
     );
 }
