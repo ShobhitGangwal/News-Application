@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import com.example.android.newsapp.R;
 import com.example.android.newsapp.RecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,6 +84,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ProgressBar loadingProgressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,11 +94,25 @@ public class HomeFragment extends Fragment {
 
         recyclerView = v.findViewById(R.id.homeRecyclerView);
         loadingProgressBar = v.findViewById(R.id.loadingProgressBar);
+        swipeRefreshLayout = v.findViewById(R.id.swipeRefreshLayout);
 
         modelClassArrayList = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new RecyclerViewAdapter(getContext(),modelClassArrayList);
         recyclerView.setAdapter(adapter);
+
+
+        // Set up swipe-to-refresh listener
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Collections.shuffle(modelClassArrayList);
+                adapter.notifyDataSetChanged();
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
 
         // Set up scroll listener for pagination
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
